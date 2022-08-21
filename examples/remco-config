@@ -1,0 +1,22 @@
+log_level = "debug"
+log_format = "text"
+log_file = "$PWD/remco.log"
+pid_file = "$PWD/remco.pid"
+  
+
+[[resource]]
+  name = "kubernetes"
+    [[resource.template]]
+        src           = "$PWD/kubernetes.conf.tmpl"
+        dst           = "$PWD/kubernetes.conf"
+        mode          = "0644"
+    [resource.backend]
+      [[resource.backend.plugin]]
+          path = "/etc/remco/plugins/kubernetes"
+          keys = [ "/services/kube-system" ]
+          interval = 10
+          watch = true
+          onetime = false
+      [resource.backend.plugin.config]
+          log_level = "debug"
+          host = "https://127.0.0.1:6443"

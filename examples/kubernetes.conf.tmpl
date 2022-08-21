@@ -1,0 +1,12 @@
+# Example
+
+{% for s in ls("/services/kube-system") %}
+{% set service = getv(printf("/services/kube-system/%s",s)) | parseJSON %}
+{% if service.spec.type == "LoadBalancer" %}
+{% for i in service.status.loadBalancer.ingress %}
+{% for p in service.spec.ports %}
+{{ i.ip }}:{{ printf("%.0f",p.port) }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
